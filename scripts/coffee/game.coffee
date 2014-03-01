@@ -5,6 +5,7 @@ module.exports = class Game
     @game = game
     @playerVelocity = 400
     @laserVelocity = 500
+    @enemyVelocity = 100
     @cursor = null
     @lives = 3
     @score = 0
@@ -72,8 +73,8 @@ module.exports = class Game
       @laserDelta = @game.time.now + @timeBetweenLaserBeams
       bounce = @game.add.tween(@player)
       bounce
-        .to({ y: @player.y + 20 }, 100, Phaser.Easing.Bounce.None)
-        .to({ y: @player.y }, 100, Phaser.Easing.Bounce.None)
+        .to({ y: @player.y + 10 }, 80, Phaser.Easing.Bounce.None)
+        .to({ y: @player.y }, 80, Phaser.Easing.Bounce.None)
         .start()
 
   spawnOneLaserBeam: ->
@@ -98,7 +99,11 @@ module.exports = class Game
   spawnOneEnemy: ->
     enemy = @enemies.getFirstExists(false)
     enemy.reset(@game.rnd.realInRange(enemy.width, @game.world.width - enemy.width), -enemy.width)
-    enemy.body.velocity.y =+ 300
+    enemy.body.velocity.y =+ @enemyVelocity
+    tween = @game.add.tween(enemy.scale)
+    tween
+      .to({ x: 0.3, y: 0.3 }, 500, Phaser.Easing.Bounce.None, true, 0, true, true)
+
 
   playerHit: (player, enemy) ->
     enemy.kill()
