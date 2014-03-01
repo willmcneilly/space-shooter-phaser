@@ -71,7 +71,7 @@ module.exports = class Game
 
   spawnOneLaserBeam: ->
     laser = @lasers.getFirstExists(false)
-    laser.reset(@player.x, @player.y)
+    laser.reset(@player.x + (@player.width / 2 - 3), @player.y)
     laser.body.velocity.y =- 500
 
   spawnEnemy: ->
