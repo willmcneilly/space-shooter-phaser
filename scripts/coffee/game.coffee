@@ -14,6 +14,7 @@ module.exports = class Game
     @averageEnemySpawnTime = 1000
     @enemyDelta = 0
     @score = 0
+    @lives = 3
 
   preload: ->
     @game.load.image('bg', '/assets/images/background.png')
@@ -30,6 +31,7 @@ module.exports = class Game
     @createLasers()
     @createEnemies()
     @createScoreText()
+    @createLivesText()
     @cursor = @game.input.keyboard.createCursorKeys()
 
   update: ->
@@ -45,6 +47,7 @@ module.exports = class Game
 
     @spawnEnemy()
     @updateScoreText()
+    @updateLivesText()
 
     @game.physics.overlap(@player, @enemies, @playerHit, null, this)
     @game.physics.overlap(@lasers, @enemies, @enemyHit, null, this)
@@ -88,7 +91,13 @@ module.exports = class Game
       @enemyDelta = @game.time.now + @enemySpawnTime()
 
   createScoreText: ->
-    @scoreText = @game.add.text(0, 0, @score, { fontSize: '14px', fill: 'white'})
+    @scoreText = @game.add.text(20, 20, @score, { fontSize: '14px', fill: 'white'})
+
+  createLivesText: ->
+    @livesText = @game.add.text(0, 0, @lives, { fontSize: '14px', fill: 'white'})
+    @livesText.anchor = new Phaser.Point(1,0)
+    @livesText.x = @game.width - 20
+    @livesText.y = 20
 
   enemySpawnTime: ->
     spawnTimeRange = @averageEnemySpawnTime * 0.2
@@ -102,11 +111,15 @@ module.exports = class Game
     enemy.body.velocity.y =+ @enemyVelocity
     tween = @game.add.tween(enemy.scale)
     tween
-      .to({ x: 0.3, y: 0.3 }, 500, Phaser.Easing.Bounce.None, true, 0, true, true)
+      .to({ x: 0.3, y: 0.3 }, 500, Phaser.Easing.Bounce.IN, true, 90, true, true)
 
 
   playerHit: (player, enemy) ->
     enemy.kill()
+    if (@lives == 1)
+      @player.kill()
+      @game.state.start('postGame', false)
+    @lives -= 1
 
   enemyHit: (laser, enemy) ->
     laser.kill()
@@ -115,3 +128,10 @@ module.exports = class Game
 
   updateScoreText: ->
     @scoreText.content = @score
+
+  updateLivesText: ->
+    @livesText.content = @lives
+    if @lives is 1
+      f = @livesText.font
+      f.fill = '#ff0000'
+      @livesText.setStyle(f)
