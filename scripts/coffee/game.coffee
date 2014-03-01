@@ -23,6 +23,7 @@ module.exports = class Game
   create: ->
     @background = @game.add.sprite(0, 0, 'bg')
     @createPlayer()
+    @createLasers()
     @cursor = @game.input.keyboard.createCursorKeys()
 
 
@@ -34,8 +35,20 @@ module.exports = class Game
     else if @cursor.right.isDown
       @player.body.velocity.x = @playerVelocity
 
+    if @cursor.up.isDown
+      @fire()
 
   createPlayer: ->
     @player = @game.add.sprite(0, 0, 'player')
     @player.y = (@game.height - @player.height) - 20
     @player.x = @game.width - @player.width
+
+  createLasers: ->
+    @lasers =  @game.add.group()
+    @lasers.createMultiple(25, 'laser')
+    @lasers.setAll('outOfBoundsKill', true)
+
+  fire: ->
+    laser = @lasers.getFirstExists(false)
+    laser.reset(@player.x, @player.y)
+    laser.body.velocity.y =- 500
