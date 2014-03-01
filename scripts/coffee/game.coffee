@@ -3,18 +3,6 @@ FPS = require './fps'
 module.exports = class Game
   constructor: (game) ->
     @game = game
-    @playerVelocity = 400
-    @laserVelocity = 500
-    @enemyVelocity = 100
-    @cursor = null
-    @lives = 3
-    @score = 0
-    @timeBetweenLaserBeams = 200
-    @laserDelta = 0
-    @averageEnemySpawnTime = 1000
-    @enemyDelta = 0
-    @score = 0
-    @lives = 3
 
   preload: ->
     @game.load.image('bg', '/assets/images/background.png')
@@ -26,6 +14,19 @@ module.exports = class Game
     @game.load.image('laser', '/assets/images/laser-green.png')
 
   create: ->
+    @playerVelocity = 400
+    @laserVelocity = 500
+    @enemyVelocity = 400
+    @cursor = null
+    @lives = 3
+    @score = 0
+    @timeBetweenLaserBeams = 200
+    @laserDelta = 0
+    @averageEnemySpawnTime = 600
+    @enemyDelta = 0
+    @score = 0
+    @lives = 3
+
     @background = @game.add.sprite(0, 0, 'bg')
     @createPlayer()
     @createLasers()
@@ -112,7 +113,6 @@ module.exports = class Game
     tween = @game.add.tween(enemy.scale)
     tween
       .to({ x: 0.3, y: 0.3 }, 500, Phaser.Easing.Bounce.IN, true, 90, true, true)
-
 
   playerHit: (player, enemy) ->
     enemy.kill()
