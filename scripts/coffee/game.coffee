@@ -9,8 +9,8 @@ module.exports = class Game
     @score = 0
     @timeBetweenLaserBeams = 200
     @laserDelta = 0
-
-
+    @averageEnemySpawnTime = 1000
+    @enemyDelta = 0
 
   preload: ->
     @game.load.image('bg', '/assets/images/background.png')
@@ -21,13 +21,12 @@ module.exports = class Game
     @game.load.image('powerUp', '/assets/images/star-gold.png')
     @game.load.image('laser', '/assets/images/laser-green.png')
 
-
   create: ->
     @background = @game.add.sprite(0, 0, 'bg')
     @createPlayer()
     @createLasers()
+    @createEnemies()
     @cursor = @game.input.keyboard.createCursorKeys()
-
 
   update: ->
     @player.body.velocity.x = 0
@@ -40,6 +39,7 @@ module.exports = class Game
     if @cursor.up.isDown
       @fire()
 
+    @spawnEnemy()
 
   createPlayer: ->
     @player = @game.add.sprite(0, 0, 'player')
@@ -51,6 +51,11 @@ module.exports = class Game
     @lasers.createMultiple(25, 'laser')
     @lasers.setAll('outOfBoundsKill', true)
 
+  createEnemies: ->
+    @enemies =  @game.add.group()
+    @enemies.createMultiple(25, 'enemy1')
+    @enemies.setAll('outOfBoundsKill', true)
+
   fire: ->
     if @game.time.now > @laserDelta
       @spawnOneLaserBeam()
@@ -60,3 +65,19 @@ module.exports = class Game
     laser = @lasers.getFirstExists(false)
     laser.reset(@player.x, @player.y)
     laser.body.velocity.y =- 500
+
+  spawnEnemy: ->
+    if @game.time.now > @enemyDelta
+      @spawnOneEnemy()
+      @enemyDelta = @game.time.now + @enemySpawnTime()
+
+  enemySpawnTime: ->
+    spawnTimeRange = @averageEnemySpawnTime * 0.2
+    upper = @averageEnemySpawnTime + spawnTimeRange
+    lower = @averageEnemySpawnTime - spawnTimeRange
+    return @game.rnd.integerInRange(lower, upper)
+
+  spawnOneEnemy: ->
+    enemy = @enemies.getFirstExists(false)
+    enemy.reset(@game.rnd.realInRange(enemy.width, @game.world.width - enemy.width), -enemy.width)
+    enemy.body.velocity.y =+ 300
