@@ -11,6 +11,7 @@ module.exports = class Game
     @laserDelta = 0
     @averageEnemySpawnTime = 1000
     @enemyDelta = 0
+    @score = 0
 
   preload: ->
     @game.load.image('bg', '/assets/images/background.png')
@@ -26,6 +27,7 @@ module.exports = class Game
     @createPlayer()
     @createLasers()
     @createEnemies()
+    @createScoreText()
     @cursor = @game.input.keyboard.createCursorKeys()
 
   update: ->
@@ -40,6 +42,8 @@ module.exports = class Game
       @fire()
 
     @spawnEnemy()
+    @updateScoreText()
+
     @game.physics.overlap(@player, @enemies, @playerHit, null, this)
     @game.physics.overlap(@lasers, @enemies, @enemyHit, null, this)
 
@@ -75,6 +79,9 @@ module.exports = class Game
       @spawnOneEnemy()
       @enemyDelta = @game.time.now + @enemySpawnTime()
 
+  createScoreText: ->
+    @scoreText = @game.add.text(0, 0, @score, { fontSize: '14px', fill: 'white'})
+
   enemySpawnTime: ->
     spawnTimeRange = @averageEnemySpawnTime * 0.2
     upper = @averageEnemySpawnTime + spawnTimeRange
@@ -92,3 +99,7 @@ module.exports = class Game
   enemyHit: (laser, enemy) ->
     laser.kill()
     enemy.kill()
+    @score += 1
+
+  updateScoreText: ->
+    @scoreText.content = @score
