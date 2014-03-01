@@ -4,6 +4,7 @@ module.exports = class Game
   constructor: (game) ->
     @game = game
     @playerVelocity = 400
+    @laserVelocity = 500
     @cursor = null
     @lives = 3
     @score = 0
@@ -49,6 +50,7 @@ module.exports = class Game
 
   createPlayer: ->
     @player = @game.add.sprite(0, 0, 'player')
+    @player.body.collideWorldBounds = true
     @player.y = (@game.height - @player.height) - 20
     @player.x = @game.width - @player.width
 
@@ -68,11 +70,16 @@ module.exports = class Game
     if @game.time.now > @laserDelta
       @spawnOneLaserBeam()
       @laserDelta = @game.time.now + @timeBetweenLaserBeams
+      bounce = @game.add.tween(@player)
+      bounce
+        .to({ y: @player.y + 20 }, 100, Phaser.Easing.Bounce.None)
+        .to({ y: @player.y }, 100, Phaser.Easing.Bounce.None)
+        .start()
 
   spawnOneLaserBeam: ->
     laser = @lasers.getFirstExists(false)
     laser.reset(@player.x + (@player.width / 2 - 3), @player.y)
-    laser.body.velocity.y =- 500
+    laser.body.velocity.y =- @laserVelocity
 
   spawnEnemy: ->
     if @game.time.now > @enemyDelta
