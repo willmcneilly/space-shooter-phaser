@@ -3,6 +3,7 @@ FPS = require './fps'
 module.exports = class Game
   constructor: (game) ->
     @game = game
+    @playerVelocity = 400
     @cursor = null
     @lives = 3
     @score = 0
@@ -21,9 +22,20 @@ module.exports = class Game
 
   create: ->
     @background = @game.add.sprite(0, 0, 'bg')
-    @player = @game.add.sprite(0, 0, 'player')
+    @createPlayer()
     @cursor = @game.input.keyboard.createCursorKeys()
 
 
-
   update: ->
+    @player.body.velocity.x = 0
+
+    if @cursor.left.isDown
+      @player.body.velocity.x = -@playerVelocity
+    else if @cursor.right.isDown
+      @player.body.velocity.x = @playerVelocity
+
+
+  createPlayer: ->
+    @player = @game.add.sprite(0, 0, 'player')
+    @player.y = (@game.height - @player.height) - 20
+    @player.x = @game.width - @player.width
