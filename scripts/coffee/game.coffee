@@ -57,7 +57,7 @@ module.exports = class Game
     @player = @game.add.sprite(0, 0, 'player')
     @player.body.collideWorldBounds = true
     @player.y = (@game.height - @player.height) - 20
-    @player.x = @game.width - @player.width
+    @player.x = @game.width / 2 - @player.width / 2
 
   createLasers: ->
     @lasers =  @game.add.group()
