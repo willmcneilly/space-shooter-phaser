@@ -4,7 +4,7 @@ Game = require './game'
 
 module.exports = class SpaceShooterGame
   constructor: () ->
-    @game = new Phaser.Game 400, 400, Phaser.AUTO
+    @game = new Phaser.Game 450, 750, Phaser.AUTO
     @registerStates()
 
   registerStates: ->

@@ -1,7 +1,12 @@
+
+canvas {
+	margin: 40px auto;
+}
+
 #status {
 	font-weight: bold;
 	padding: 2em;
-	
+
 	> p {
 
 		&:nth-child(1) {
