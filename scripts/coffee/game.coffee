@@ -55,6 +55,8 @@ module.exports = class Game
     @enemies =  @game.add.group()
     @enemies.createMultiple(25, 'enemy1')
     @enemies.setAll('outOfBoundsKill', true)
+    @enemies.setAll('scale.x', 0.5)
+    @enemies.setAll('scale.y', 0.5)
 
   fire: ->
     if @game.time.now > @laserDelta
