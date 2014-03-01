@@ -40,6 +40,8 @@ module.exports = class Game
       @fire()
 
     @spawnEnemy()
+    @game.physics.overlap(@player, @enemies, @playerHit, null, this)
+    @game.physics.overlap(@lasers, @enemies, @enemyHit, null, this)
 
   createPlayer: ->
     @player = @game.add.sprite(0, 0, 'player')
@@ -83,3 +85,10 @@ module.exports = class Game
     enemy = @enemies.getFirstExists(false)
     enemy.reset(@game.rnd.realInRange(enemy.width, @game.world.width - enemy.width), -enemy.width)
     enemy.body.velocity.y =+ 300
+
+  playerHit: (player, enemy) ->
+    enemy.kill()
+
+  enemyHit: (laser, enemy) ->
+    laser.kill()
+    enemy.kill()
