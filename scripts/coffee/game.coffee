@@ -116,6 +116,11 @@ module.exports = class Game
 
   playerHit: (player, enemy) ->
     enemy.kill()
+    bounce = @game.add.tween(@player)
+    bounce
+      .to({ alpha: 0.4 }, 100, Phaser.Easing.Bounce.None)
+      .to({ alpha: @player.alpha }, 100, Phaser.Easing.Bounce.None)
+      .start()
     if (@lives == 1)
       @player.kill()
       @game.state.start('postGame', false)
