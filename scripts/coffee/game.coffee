@@ -16,7 +16,8 @@ module.exports = class Game
   create: ->
     @playerVelocity = 400
     @laserVelocity = 500
-    @enemyVelocity = 400
+    @enemyVelocity = 100
+    @baseEnemyVelocity = 100
     @cursor = null
     @lives = 3
     @score = 0
@@ -34,6 +35,7 @@ module.exports = class Game
     @createScoreText()
     @createLivesText()
     @cursor = @game.input.keyboard.createCursorKeys()
+    @startTime = @game.time.now
 
   update: ->
     @player.body.velocity.x = 0
@@ -46,6 +48,7 @@ module.exports = class Game
     if @cursor.up.isDown
       @fire()
 
+    @updateEnemySpeed()
     @spawnEnemy()
     @updateScoreText()
     @updateLivesText()
@@ -77,7 +80,7 @@ module.exports = class Game
       @laserDelta = @game.time.now + @timeBetweenLaserBeams
       bounce = @game.add.tween(@player)
       bounce
-        .to({ y: @player.y + 10 }, 80, Phaser.Easing.Bounce.None)
+        .to({ y: @player.y + 5 }, 80, Phaser.Easing.Bounce.None)
         .to({ y: @player.y }, 80, Phaser.Easing.Bounce.None)
         .start()
 
@@ -140,3 +143,8 @@ module.exports = class Game
       f = @livesText.font
       f.fill = '#ff0000'
       @livesText.setStyle(f)
+
+
+  updateEnemySpeed: ->
+    velocityAddOn = (@game.time.now - @startTime) / 1000
+    @enemyVelocity = @baseEnemyVelocity + velocityAddOn
