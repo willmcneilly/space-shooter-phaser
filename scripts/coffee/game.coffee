@@ -147,9 +147,9 @@ module.exports = class Game
     enemy = @enemies.getFirstExists(false)
     enemy.reset(@game.rnd.realInRange(enemy.width, @game.world.width - enemy.width), -enemy.width)
     enemy.body.velocity.y =+ @enemyVelocity
-    tween = @game.add.tween(enemy.scale)
-    tween
-      .to({ x: 0.3, y: 0.3 }, 500, Phaser.Easing.Bounce.IN, true, 90, true, true)
+    # tween = @game.add.tween(enemy.scale)
+    # tween
+    #   .to({ x: 0.3, y: 0.3 }, 500, Phaser.Easing.Bounce.IN, true, 90, true, true)
 
   playerHit: (player, enemy) ->
     enemy.kill()
@@ -185,7 +185,6 @@ module.exports = class Game
   powerUpHit: (laser, powerUp) ->
     laser.kill()
     powerUp.kill()
-    @score =- 10
 
   powerUpPlayer: (player, powerUp)->
     powerUp.kill()
