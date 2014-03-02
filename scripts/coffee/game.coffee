@@ -25,12 +25,14 @@ module.exports = class Game
     @laserDelta = 0
     @averageEnemySpawnTime = 600
     @enemyDelta = 0
-    @score = 0
-    @lives = 3
+    @powerUpDelta = 0
+    @powerUpSpawnTime = 8000
+    @powerUpVelocity = 100
 
     @background = @game.add.sprite(0, 0, 'bg')
     @createPlayer()
     @createLasers()
+    @createPowerUps()
     @createEnemies()
     @createScoreText()
     @createLivesText()
@@ -50,11 +52,14 @@ module.exports = class Game
 
     @updateEnemySpeed()
     @spawnEnemy()
+    @spawnPowerUps()
     @updateScoreText()
     @updateLivesText()
 
     @game.physics.overlap(@player, @enemies, @playerHit, null, this)
     @game.physics.overlap(@lasers, @enemies, @enemyHit, null, this)
+    @game.physics.overlap(@lasers, @powerUps, @powerUpHit, null, this)
+    @game.physics.overlap(@player, @powerUps, @powerUpPlayer, null, this)
 
   createPlayer: ->
     @player = @game.add.sprite(0, 0, 'player')
@@ -73,6 +78,11 @@ module.exports = class Game
     @enemies.setAll('outOfBoundsKill', true)
     @enemies.setAll('scale.x', 0.5)
     @enemies.setAll('scale.y', 0.5)
+
+  createPowerUps: ->
+    @powerUps = @game.add.group()
+    @powerUps.createMultiple(5, 'powerUp')
+    @powerUps.setAll('outOfBoundsKill', true)
 
   fire: ->
     if @game.time.now > @laserDelta
@@ -93,6 +103,16 @@ module.exports = class Game
     if @game.time.now > @enemyDelta
       @spawnOneEnemy()
       @enemyDelta = @game.time.now + @enemySpawnTime()
+
+  spawnPowerUps: ->
+    if @game.time.now > @powerUpDelta
+      @spawnOnePowerUp()
+      @powerUpDelta = @game.time.now + @powerUpSpawnTime
+
+  spawnOnePowerUp: ->
+    powerUp = @powerUps.getFirstExists(false)
+    powerUp.reset(@game.rnd.realInRange(powerUp.width, @game.world.width - powerUp.width), -powerUp.width)
+    powerUp.body.velocity.y += @powerUpVelocity
 
   createScoreText: ->
     @scoreText = @game.add.text(20, 20, @score, { fontSize: '14px', fill: 'white'})
@@ -144,7 +164,15 @@ module.exports = class Game
       f.fill = '#ff0000'
       @livesText.setStyle(f)
 
-
   updateEnemySpeed: ->
     velocityAddOn = (@game.time.now - @startTime) / 1000
     @enemyVelocity = @baseEnemyVelocity + velocityAddOn
+
+  powerUpHit: (laser, powerUp) ->
+    laser.kill()
+    powerUp.kill()
+    @score =- 10
+
+  powerUpPlayer: (player, powerUp)->
+    powerUp.kill()
+    @score =+ 10
