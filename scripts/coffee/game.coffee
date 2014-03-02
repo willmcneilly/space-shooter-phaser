@@ -71,7 +71,7 @@ module.exports = class Game
 
   createLasers: ->
     @lasers =  @game.add.group()
-    @lasers.createMultiple(25, 'laser')
+    @lasers.createMultiple(40, 'laser')
     @lasers.setAll('outOfBoundsKill', true)
 
   createEnemies: ->
