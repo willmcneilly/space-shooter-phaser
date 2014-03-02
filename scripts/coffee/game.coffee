@@ -28,6 +28,8 @@ module.exports = class Game
     @powerUpDelta = 0
     @powerUpSpawnTime = 8000
     @powerUpVelocity = 100
+    @powerUpTime = 5000
+    @poweredUpDelta = 0
 
     @background = @game.add.sprite(0, 0, 'bg')
     @createPlayer()
@@ -95,9 +97,21 @@ module.exports = class Game
         .start()
 
   spawnOneLaserBeam: ->
-    laser = @lasers.getFirstExists(false)
-    laser.reset(@player.x + (@player.width / 2 - 3), @player.y)
-    laser.body.velocity.y =- @laserVelocity
+    if @isPoweredUp
+      laser1 = @lasers.getFirstExists(false)
+      laser1.reset(@player.x, @player.y)
+      laser1.body.velocity.y =- @laserVelocity
+
+      laser2 = @lasers.getFirstExists(false)
+      laser2.reset(@player.x + @player.width, @player.y)
+      laser2.body.velocity.y =- @laserVelocity
+
+      if @game.time.now > @poweredUpDelta
+        @isPoweredUp = false
+    else
+      laser = @lasers.getFirstExists(false)
+      laser.reset(@player.x + (@player.width / 2 - 3), @player.y)
+      laser.body.velocity.y =- @laserVelocity
 
   spawnEnemy: ->
     if @game.time.now > @enemyDelta
@@ -176,3 +190,5 @@ module.exports = class Game
   powerUpPlayer: (player, powerUp)->
     powerUp.kill()
     @score =+ 10
+    @isPoweredUp = true
+    @poweredUpDelta = @game.time.now + @powerUpTime
