@@ -63,7 +63,7 @@ gulp.task 'html', ->
 gulp.task 'images', ->
   gulp.src 'resources/images/**'
     .pipe imagemin()
-    .pipe gulp.dest 'dist/assets/images/'
+    .pipe gulp.dest 'dist/space-shooter-phaser/assets/images/'
     .pipe refresh server
 
 gulp.task 'sounds', ->
