@@ -5,13 +5,13 @@ module.exports = class Game
     @game = game
 
   preload: ->
-    @game.load.image('bg', '/assets/images/background.png')
-    @game.load.image('player', '/assets/images/player-ship.png')
-    @game.load.image('enemy1', '/assets/images/enemy-green.png')
-    @game.load.image('enemy2', '/assets/images/enemy-red.png')
-    @game.load.image('enemy3', '/assets/images/enemy-yellow.png')
-    @game.load.image('powerUp', '/assets/images/star-gold.png')
-    @game.load.image('laser', '/assets/images/laser-green.png')
+    @game.load.image('bg', '/assets/background.png')
+    @game.load.image('player', '/assets/player-ship.png')
+    @game.load.image('enemy1', '/assets/enemy-green.png')
+    @game.load.image('enemy2', '/assets/enemy-red.png')
+    @game.load.image('enemy3', '/assets/enemy-yellow.png')
+    @game.load.image('powerUp', '/assets/star-gold.png')
+    @game.load.image('laser', '/assets/laser-green.png')
 
   create: ->
     @playerVelocity = 400

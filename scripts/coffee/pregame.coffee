@@ -3,7 +3,7 @@ module.exports = class PreGame
     game = @game
 
   preload: ->
-    @game.load.image('bg', '/assets/images/background.png')
+    @game.load.image('bg', '/assets/background.png')
 
   create: ->
     @background = @game.add.sprite(0, 0, 'bg')
